@@ -1,35 +1,24 @@
-# syntax=docker/dockerfile:1
-# build stage
-FROM golang:alpine AS build
+FROM golang:alpine AS builder
 
-WORKDIR /app
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64
 
-COPY go.mod go.sum ./
+WORKDIR /build
+
+COPY go.mod go.sum cmd/main.go ./
 
 RUN go mod download
 
+RUN go build -o main .
 
-# Copy the source code. Note the slash at the end, as explained in
-# https://docs.docker.com/engine/reference/builder/#copy
-COPY cmd/main.go ./
+WORKDIR /dist
 
-# Build
-RUN CGO_ENABLED=0 GOOS=linux go build -o /go-docker-test
+RUN cp /build/main .
 
-# Final stage
-FROM alpine:latest
+FROM scratch
 
-RUN apk --no-cache add ca-certificates
+COPY --from=builder /dist/main .
 
-WORKDIR /root/
-
-COPY --from=build /go-docker-test .
-
-# Options:
-# To bind to a TCP port, runtime parameters must be supplied to the docker command.
-EXPOSE 8080
-
-USER nonroot:nonroot
-
-CMD ["/go-docker-test"]
-
+ENTRYPOINT ["/main"]
