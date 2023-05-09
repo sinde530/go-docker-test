@@ -1,26 +1,21 @@
-FROM golang:alpine AS builder
+# syntax=docker/dockerfile:1
+# Build stage
+FROM golang:alpine AS build
 
-ENV GO111MODULE=on \
-    CGO_ENABLED=0 \
-    GOOS=linux \
-    GOARCH=amd64
+WORKDIR /app
 
-WORKDIR /build
-
-COPY go.mod go.sum cmd/main.go ./
-
+COPY go.mod go.sum ./
 RUN go mod download
 
-RUN go build -o main .
+COPY cmd/main.go ./
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-w -s" -o /go-docker-test
 
-WORKDIR /dist
-
-RUN cp /build/main .
-
+# Final stage
 FROM scratch
 
-COPY --from=builder /dist/main .
+COPY --from=build /go-docker-test /go-docker-test
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 8080
 
-ENTRYPOINT ["/main"]
+CMD ["/go-docker-test"]
