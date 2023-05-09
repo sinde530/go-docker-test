@@ -14,7 +14,7 @@ func main() {
 	addr := "/8080"
 
 	fmt.Printf("Server is listening on %s...\n", addr)
-	log.Fatal(http.ListenAndServe(":8080", r))
+	log.Fatal(http.ListenAndServe(":80", r))
 }
 
 func pingTest(c *gin.Context) {

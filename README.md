@@ -13,3 +13,12 @@
 └── DockerFile
 └── README.md
 ```
+
+## docker cli
+
+```docker
+docker build . -t go-dock
+
+docker image ls
+
+```
