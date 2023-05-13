@@ -22,3 +22,5 @@ docker build . -t go-dock
 docker image ls
 
 ```
+
+### raspberry pi 4
