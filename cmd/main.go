@@ -28,7 +28,7 @@ func main() {
 }
 
 func pingTest(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"message": "pong"})
+	c.JSON(http.StatusOK, gin.H{"message": "Rasberry Pi 4 Server Open."})
 }
 
 func handleWebSocket(c *gin.Context) {

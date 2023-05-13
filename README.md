@@ -23,4 +23,10 @@ docker image ls
 
 ```
 
-### raspberry pi 4
+# raspberry pi 4
+
+**all containers remove**
+
+```docker
+docker rm $(docker ps -aq)
+```
