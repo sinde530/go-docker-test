@@ -23,19 +23,19 @@ func init() {
 	mongoUrl = os.Getenv("MONGO_URL")
 }
 
-func ConnectToDB() (*mongo.Client, error) {
+func ConnectToDB() *mongo.Client {
 	clientOptions := options.Client().ApplyURI(mongoUrl)
 
 	client, err := mongo.Connect(context.Background(), clientOptions)
 	if err != nil {
-		return nil, err
+		return nil
 	}
 
 	err = client.Ping(context.Background(), nil)
 	if err != nil {
-		return nil, err
+		return nil
 	}
 
 	fmt.Println("Connected to MongoDB!")
-	return client, nil
+	return client
 }
