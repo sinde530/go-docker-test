@@ -1,26 +1,19 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sinde530/go-docekr-test/internal/db"
+	"github.com/sinde530/go-docekr-test/cmd/cpu"
 )
 
 func main() {
-	client, err := db.ConnectToDB()
-	if err != nil {
-		fmt.Println("Failed to connected MongoDB", err.Error())
-		return
-	}
-
-	defer client.Disconnect(context.Background())
-
 	r := gin.Default()
 	r.GET("/ping", pingTest)
+	// r.POST("/signup", HandleSignup)
+	r.GET("/cpu", cpu.GetCPUTemperature)
 	addr := "/8080"
 
 	fmt.Printf("Server is listening on %s...\n", addr)
